@@ -2,6 +2,16 @@
 """
 Improved Housing Prices Prediction Model
 Addresses overfitting issues in the original Random Forest model
+
+This version focuses on:
+1. Aggressive feature selection (correlation > 0.25, max 15 features)
+2. Conservative hyperparameters (max_depth ≤ 6, min_samples_split ≥ 10, min_samples_leaf ≥ 5)
+3. Regularization techniques (cost complexity pruning, max_leaf_nodes limit)
+4. Cross-validation for hyperparameter tuning
+5. Ensemble approach with Ridge regression
+6. Comprehensive overfitting detection and analysis
+
+No comparisons to older versions - standalone overfitting analysis only.
 """
 
 import numpy as np
@@ -240,19 +250,23 @@ def train_and_evaluate_model(best_model, X_train, X_val, y_train, y_val):
     print(f"Validation MAPE: {val_mape_improved:.2%}, Validation MSE: {val_mse_improved:.2f}")
     print(f"Out-of-bag score: {best_model.oob_score_:.4f}")
     
-    # Compare with original model
-    print("\n=== COMPARISON WITH ORIGINAL MODEL ===")
-    print(f"Original - Training MAPE: 7.99%, Validation MAPE: 12.14%")
-    print(f"Improved - Training MAPE: {train_mape_improved:.2%}, Validation MAPE: {val_mape_improved:.2%}")
+    # Overfitting analysis for current model only
+    print("\n=== OVERFITTING ANALYSIS ===")
+    current_overfitting_gap = val_mape_improved - train_mape_improved
+    print(f"Training MAPE: {train_mape_improved:.2%}")
+    print(f"Validation MAPE: {val_mape_improved:.2%}")
+    print(f"Overfitting gap: {current_overfitting_gap:.2f} percentage points")
     
-    # Check if overfitting is reduced
-    overfitting_reduction = (val_mape_improved - train_mape_improved) - (12.14 - 7.99)
-    print(f"Overfitting reduction: {overfitting_reduction:.2f} percentage points")
+    # Check if overfitting is acceptable (gap should be < 5%)
+    if current_overfitting_gap < 0.05:
+        print("✅ Good: Overfitting gap is acceptable (< 5%)")
+    else:
+        print("⚠️  Warning: Overfitting gap is still high")
     
     return train_mape_improved, val_mape_improved
 
 def analyze_feature_importance(best_model, X_train):
-    """Analyze feature importance"""
+    """Analyze feature importance and check for overfitting indicators"""
     print("\n=== FEATURE IMPORTANCE ANALYSIS ===")
     
     feature_importance = pd.DataFrame({
@@ -262,6 +276,24 @@ def analyze_feature_importance(best_model, X_train):
     
     print("Top 15 most important features:")
     print(feature_importance.head(15))
+    
+    # Check for overfitting indicators in feature importance
+    print("\n=== OVERFITTING INDICATORS IN FEATURE IMPORTANCE ===")
+    
+    # Check if any single feature dominates (could indicate overfitting)
+    max_importance = feature_importance['importance'].max()
+    if max_importance > 0.3:
+        print(f"⚠️  Warning: Feature '{feature_importance.iloc[0]['feature']}' has very high importance ({max_importance:.3f})")
+        print("   This could indicate overfitting to a single feature")
+    else:
+        print("✅ Good: No single feature dominates the model")
+    
+    # Check feature importance distribution
+    importance_std = feature_importance['importance'].std()
+    if importance_std < 0.05:
+        print("✅ Good: Feature importance is well distributed")
+    else:
+        print("⚠️  Feature importance varies significantly")
     
     # Plot feature importance
     plt.figure(figsize=(12, 8))
@@ -276,7 +308,7 @@ def analyze_feature_importance(best_model, X_train):
     return feature_importance
 
 def cross_validation_evaluation(best_model, X, y):
-    """Perform cross-validation evaluation"""
+    """Perform cross-validation evaluation with comprehensive overfitting detection"""
     print("\n=== CROSS-VALIDATION EVALUATION ===")
     print("Performing cross-validation...")
     
@@ -289,8 +321,11 @@ def cross_validation_evaluation(best_model, X, y):
     improved_scores = cross_val_score(best_model, X, y, cv=cv, scoring='neg_mean_squared_error')
     improved_rmse_scores = np.sqrt(-improved_scores)
     
-    # Check for overfitting in CV
+    # Comprehensive overfitting detection
     train_scores = []
+    val_scores = []
+    overfitting_gaps = []
+    
     for train_idx, val_idx in cv.split(X):
         X_fold_train, X_fold_val = X.iloc[train_idx], X.iloc[val_idx]
         y_fold_train, y_fold_val = y.iloc[train_idx], y.iloc[val_idx]
@@ -298,18 +333,38 @@ def cross_validation_evaluation(best_model, X, y):
         best_model.fit(X_fold_train, y_fold_train)
         train_score = best_model.score(X_fold_train, y_fold_train)
         val_score = best_model.score(X_fold_val, y_fold_val)
+        
         train_scores.append(train_score)
+        val_scores.append(val_score)
+        overfitting_gaps.append(train_score - val_score)
     
     avg_train_score = np.mean(train_scores)
     avg_cv_score = np.mean(improved_scores)
+    avg_overfitting_gap = np.mean(overfitting_gaps)
     
     print("=== CROSS-VALIDATION RESULTS ===")
-    print(f"Original model CV RMSE: 139.14")
-    print(f"Improved model CV RMSE: {improved_rmse_scores.mean():.2f} (+/- {improved_rmse_scores.std() * 2:.2f})")
-    print(f"\nOverfitting check in CV:")
+    print(f"Cross-validation RMSE: {improved_rmse_scores.mean():.2f} (+/- {improved_rmse_scores.std() * 2:.2f})")
+    print(f"\n=== OVERFITTING ANALYSIS IN CV ===")
     print(f"Average Training R²: {avg_train_score:.4f}")
     print(f"Average CV R²: {avg_cv_score:.4f}")
-    print(f"CV Gap: {avg_train_score - avg_cv_score:.4f} (smaller is better)")
+    print(f"Average Overfitting Gap: {avg_overfitting_gap:.4f}")
+    
+    # Evaluate overfitting severity in CV
+    if avg_overfitting_gap < 0.02:
+        print("✅ Excellent: Very low overfitting in CV (< 2%)")
+    elif avg_overfitting_gap < 0.05:
+        print("✅ Good: Acceptable overfitting in CV (< 5%)")
+    elif avg_overfitting_gap < 0.08:
+        print("⚠️  Moderate: Some overfitting in CV (< 8%)")
+    else:
+        print("❌ High: Significant overfitting in CV (≥ 8%)")
+    
+    # Check for consistency across folds
+    gap_std = np.std(overfitting_gaps)
+    if gap_std < 0.02:
+        print("✅ Stable: Consistent performance across CV folds")
+    else:
+        print("⚠️  Variable: Performance varies significantly across CV folds")
     
     return improved_rmse_scores
 
@@ -390,8 +445,113 @@ def compare_with_ridge(X_train, X_val, y_train, y_val, improved_rmse_scores, val
     print(f"\nBest model: {best_final_model_name}")
     return best_final_model_name, ridge_val_mape
 
+def comprehensive_overfitting_check(best_model, X_train, X_val, y_train, y_val, feature_importance):
+    """Comprehensive overfitting detection and analysis"""
+    print("\n" + "="*60)
+    print("🔍 COMPREHENSIVE OVERFITTING ANALYSIS")
+    print("="*60)
+    
+    # 1. Performance gap analysis
+    train_score = best_model.score(X_train, y_train)
+    val_score = best_model.score(X_val, y_val)
+    performance_gap = train_score - val_score
+    
+    print(f"\n1. PERFORMANCE GAP ANALYSIS:")
+    print(f"   Training R²: {train_score:.4f}")
+    print(f"   Validation R²: {val_score:.4f}")
+    print(f"   Performance Gap: {performance_gap:.4f}")
+    
+    # 2. MAPE-based overfitting check
+    from sklearn.metrics import mean_absolute_percentage_error
+    y_train_pred = best_model.predict(X_train)
+    y_val_pred = best_model.predict(X_val)
+    
+    train_mape = mean_absolute_percentage_error(y_train, y_train_pred)
+    val_mape = mean_absolute_percentage_error(y_val, y_val_pred)
+    mape_gap = val_mape - train_mape
+    
+    print(f"\n2. MAPE-BASED OVERFITTING CHECK:")
+    print(f"   Training MAPE: {train_mape:.2%}")
+    print(f"   Validation MAPE: {val_mape:.2%}")
+    print(f"   MAPE Gap: {mape_gap:.2%}")
+    
+    # 3. Model complexity analysis
+    if hasattr(best_model, 'n_estimators'):
+        n_trees = best_model.n_estimators
+        max_depth = best_model.max_depth
+        min_samples_split = best_model.min_samples_split
+        min_samples_leaf = best_model.min_samples_leaf
+        
+        print(f"\n3. MODEL COMPLEXITY ANALYSIS:")
+        print(f"   Number of trees: {n_trees}")
+        print(f"   Max depth: {max_depth}")
+        print(f"   Min samples split: {min_samples_split}")
+        print(f"   Min samples leaf: {min_samples_leaf}")
+        
+        # Evaluate complexity appropriateness
+        if max_depth <= 6 and min_samples_split >= 10 and min_samples_leaf >= 5:
+            print("   ✅ Good: Conservative hyperparameters to prevent overfitting")
+        else:
+            print("   ⚠️  Warning: Some hyperparameters might be too aggressive")
+    
+    # 4. Feature importance analysis
+    print(f"\n4. FEATURE IMPORTANCE ANALYSIS:")
+    max_importance = feature_importance['importance'].max()
+    importance_std = feature_importance['importance'].std()
+    
+    if max_importance < 0.3:
+        print("   ✅ Good: No single feature dominates")
+    else:
+        print(f"   ⚠️  Warning: Feature '{feature_importance.iloc[0]['feature']}' dominates ({max_importance:.3f})")
+    
+    if importance_std < 0.05:
+        print("   ✅ Good: Feature importance is well distributed")
+    else:
+        print("   ⚠️  Feature importance varies significantly")
+    
+    # 5. Overall overfitting assessment
+    print(f"\n5. OVERALL OVERFITTING ASSESSMENT:")
+    
+    overfitting_score = 0
+    if performance_gap < 0.02:
+        overfitting_score += 2
+        print("   ✅ Excellent: Very low performance gap")
+    elif performance_gap < 0.05:
+        overfitting_score += 1
+        print("   ✅ Good: Acceptable performance gap")
+    else:
+        print("   ❌ High: Large performance gap indicates overfitting")
+    
+    if mape_gap < 0.03:
+        overfitting_score += 2
+        print("   ✅ Excellent: Very low MAPE gap")
+    elif mape_gap < 0.05:
+        overfitting_score += 1
+        print("   ✅ Good: Acceptable MAPE gap")
+    else:
+        print("   ❌ High: Large MAPE gap indicates overfitting")
+    
+    if max_importance < 0.3:
+        overfitting_score += 1
+        print("   ✅ Good: No feature dominance")
+    
+    # Final verdict
+    print(f"\n" + "="*60)
+    print("🎯 FINAL OVERFITTING VERDICT:")
+    if overfitting_score >= 4:
+        print("   🎉 EXCELLENT: Model shows minimal overfitting!")
+    elif overfitting_score >= 2:
+        print("   ✅ GOOD: Model has acceptable overfitting levels")
+    elif overfitting_score >= 1:
+        print("   ⚠️  MODERATE: Some overfitting concerns exist")
+    else:
+        print("   ❌ HIGH: Model shows significant overfitting")
+    print("="*60)
+    
+    return overfitting_score
+
 def final_summary(best_final_model_name, best_model, feature_importance, X_train, X_val, X_test, 
-                 train_mape_improved, val_mape_improved, ridge_val_mape=None):
+                 train_mape_improved, val_mape_improved, y_train, y_val, ridge_val_mape=None):
     """Provide final model summary"""
     print("\n=== FINAL MODEL SUMMARY ===")
     print(f"Best model: {best_final_model_name}")
@@ -407,14 +567,9 @@ def final_summary(best_final_model_name, best_model, feature_importance, X_train
     print(f"Test set size: {X_test.shape[0]}")
     print(f"Number of features used: {X_train.shape[1]}")
     
-    print("\n=== OVERFITTING ANALYSIS ===")
-    print(f"Original model overfitting gap: 12.14% - 7.99% = 4.15 percentage points")
-    
+    # Run comprehensive overfitting check
     if best_final_model_name == "Random Forest":
-        current_overfitting_gap = val_mape_improved - train_mape_improved
-        print(f"Improved model overfitting gap: {val_mape_improved:.2%} - {train_mape_improved:.2%} = {current_overfitting_gap:.2f} percentage points")
-        improvement = 4.15 - current_overfitting_gap
-        print(f"Overfitting reduction: {improvement:.2f} percentage points")
+        overfitting_score = comprehensive_overfitting_check(best_model, X_train, X_val, y_train, y_val, feature_importance)
     else:
         print("Ridge regression typically has less overfitting due to regularization")
         if ridge_val_mape:
@@ -471,7 +626,7 @@ def main():
     
     # Step 12: Final summary
     final_summary(best_final_model_name, best_model, feature_importance, 
-                 X_train, X_val, X_test, train_mape_improved, val_mape_improved, ridge_val_mape)
+                 X_train, X_val, X_test, train_mape_improved, val_mape_improved, y_train, y_val, ridge_val_mape)
     
     print("\n🎉 All done! Your improved model is ready!")
 
