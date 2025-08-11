@@ -93,7 +93,7 @@ The original Random Forest model suffered from significant overfitting, showing 
 python housing_prices_improved.py
 ```
 
-## 📈 Key Features
+## 🔑 Key Features
 - **Overfitting Prevention**: Comprehensive strategies to prevent model overfitting
 - **Feature Selection**: Intelligent correlation-based feature selection
 - **Hyperparameter Optimization**: Grid search with cross-validation
