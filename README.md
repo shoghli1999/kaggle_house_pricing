@@ -115,7 +115,7 @@ python housing_prices_improved.py
 4. **Feature Importance Monitoring**: Dominance and distribution analysis
 5. **Model Complexity Evaluation**: Hyperparameter appropriateness
 
-## �� Model Performance
+## 📈 Model Performance
 - **Cross-Validation RMSE**: 41,418.38 (±14,240.11)
 - **Out-of-Bag Score**: 0.7061
 - **Feature Count**: 14 (reduced from 81)
