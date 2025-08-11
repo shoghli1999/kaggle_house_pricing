@@ -3,7 +3,7 @@
 ## Overview
 A machine learning pipeline for predicting house prices using the Kaggle House Prices dataset, specifically designed to address and prevent overfitting issues commonly encountered in Random Forest models.
 
-## �� Problem Solved
+## 🧩 Problem Solved
 The original Random Forest model suffered from significant overfitting, showing a large gap between training performance (7.99% MAPE) and validation performance (12.14% MAPE). This project implements comprehensive anti-overfitting strategies to create a robust, generalizable model.
 
 ## 🚀 Key Improvements Made
@@ -40,7 +40,7 @@ The original Random Forest model suffered from significant overfitting, showing 
 - Feature importance distribution analysis
 - Model complexity evaluation
 
-## �� Results Achieved
+## 📊 Results Achieved
 
 ### **Before (Original Model)**
 - Training MAPE: 7.99%
@@ -74,7 +74,7 @@ The original Random Forest model suffered from significant overfitting, showing 
 - Performance gap tracking
 - Multi-dimensional overfitting assessment
 
-## �� Project Structure
+## ⚙️ Project Structure
 ```
 ├── housing_prices_improved.py    # Main improved model
 ├── train.csv                     # Training dataset
