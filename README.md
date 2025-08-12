@@ -1,7 +1,9 @@
 # 🏠 Improved Housing Price Prediction Model
 
 ## Overview
-A machine learning pipeline for predicting house prices using the Kaggle House Prices dataset, specifically designed to address and prevent overfitting issues commonly encountered in Random Forest models.
+This project was inspired by Kaggle’s well-known House Prices dataset, which offers a rich set of property features for building predictive models. I chose it as a learning exercise to explore advanced techniques for preventing overfitting in regression models, particularly with Random Forests. While the dataset and problem setup come from Kaggle, this work is not part of the competition — instead, it uses the scenario as a practical case study.
+
+The original idea was to take a typical overfitted Random Forest baseline and transform it into a robust, generalizable prediction pipeline. Along the way, I experimented with aggressive feature selection, conservative hyperparameter tuning, advanced regularization techniques, and an ensemble approach combining Random Forest with Ridge Regression. The result is a streamlined, production-ready workflow that not only achieves strong predictive performance but also serves as a reference for overfitting prevention strategies in real-world machine learning projects.
 
 ## 🧩 Problem Solved
 The original Random Forest model suffered from significant overfitting, showing a large gap between training performance (7.99% MAPE) and validation performance (12.14% MAPE). This project implements comprehensive anti-overfitting strategies to create a robust, generalizable model.
