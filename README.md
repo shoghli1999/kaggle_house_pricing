@@ -7,46 +7,6 @@ The original idea was to take a typical overfitted Random Forest baseline and tr
 
 ---
 
-## 🖥️ Housing Prices Analysis Dashboard
-
-An interactive web dashboard built with Streamlit to visualize and interact with the housing prices prediction model.
-
-### 🚀 Features
-
-#### 📊 **Overview Tab**
-- Project description and key features
-- Quick stats about the dataset and model
-- Data file status checking
-
-#### 🔍 **Data Analysis Tab**
-- **Data Info**: Dataset shapes, columns, and sample data
-- **Missing Values**: Analysis and visualization of missing data
-- **Correlations**: Feature selection and correlation heatmaps
-- **Feature Distribution**: Interactive histograms for numerical features
-
-#### 🏗️ **Model Training Tab**
-- **Preprocessing**: Data cleaning and preparation
-- **Feature Selection**: Correlation-based feature selection
-- **Model Training**: Hyperparameter tuning and model training
-
-#### 📈 **Results & Evaluation Tab**
-- **Performance Metrics**: Training vs validation performance
-- **Feature Importance**: Top features and their importance scores
-- **Cross-Validation**: RMSE distribution and stability analysis
-- **Overfitting Analysis**: Comprehensive overfitting detection
-
-#### 🏆 **Predictions Tab**
-- Generate predictions for test data
-- Download predictions as CSV
-- Prediction statistics and distribution plots
-
-#### ⚙️ **Settings Tab**
-- Data file status and sizes
-- Model status and session state management
-- Debugging tools
-
----
-
 ## 🧩 Problem Solved
 The original Random Forest model suffered from significant overfitting, showing a large gap between training performance (7.99% MAPE) and validation performance (12.14% MAPE). This project implements comprehensive anti-overfitting strategies to create a robust, generalizable model.
 
@@ -135,7 +95,45 @@ The original Random Forest model suffered from significant overfitting, showing 
 ├── improved_submission.csv       # Generated predictions
 └── requirements.txt              # Dependencies for dashboard
 ```
+---
 
+## 🖥️ Housing Prices Analysis Dashboard
+
+An interactive web dashboard built with Streamlit to visualize and interact with the housing prices prediction model.
+
+### 🚀 Features
+
+#### 📊 **Overview Tab**
+- Project description and key features
+- Quick stats about the dataset and model
+- Data file status checking
+
+#### 🔍 **Data Analysis Tab**
+- **Data Info**: Dataset shapes, columns, and sample data
+- **Missing Values**: Analysis and visualization of missing data
+- **Correlations**: Feature selection and correlation heatmaps
+- **Feature Distribution**: Interactive histograms for numerical features
+
+#### 🏗️ **Model Training Tab**
+- **Preprocessing**: Data cleaning and preparation
+- **Feature Selection**: Correlation-based feature selection
+- **Model Training**: Hyperparameter tuning and model training
+
+#### 📈 **Results & Evaluation Tab**
+- **Performance Metrics**: Training vs validation performance
+- **Feature Importance**: Top features and their importance scores
+- **Cross-Validation**: RMSE distribution and stability analysis
+- **Overfitting Analysis**: Comprehensive overfitting detection
+
+#### 🏆 **Predictions Tab**
+- Generate predictions for test data
+- Download predictions as CSV
+- Prediction statistics and distribution plots
+
+#### ⚙️ **Settings Tab**
+- Data file status and sizes
+- Model status and session state management
+- Debugging tools
 ---
 
 ## 🧩 Dashboard Installation & Usage
