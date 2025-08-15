@@ -5,8 +5,52 @@ This project was inspired by Kaggle’s well-known House Prices dataset, which o
 
 The original idea was to take a typical overfitted Random Forest baseline and transform it into a robust, generalizable prediction pipeline. Along the way, I experimented with aggressive feature selection, conservative hyperparameter tuning, advanced regularization techniques, and an ensemble approach combining Random Forest with Ridge Regression. The result is a streamlined, production-ready workflow that not only achieves strong predictive performance but also serves as a reference for overfitting prevention strategies in real-world machine learning projects.
 
+---
+
+## 🖥️ Housing Prices Analysis Dashboard
+
+An interactive web dashboard built with Streamlit to visualize and interact with the housing prices prediction model.
+
+### 🚀 Features
+
+#### 📊 **Overview Tab**
+- Project description and key features
+- Quick stats about the dataset and model
+- Data file status checking
+
+#### 🔍 **Data Analysis Tab**
+- **Data Info**: Dataset shapes, columns, and sample data
+- **Missing Values**: Analysis and visualization of missing data
+- **Correlations**: Feature selection and correlation heatmaps
+- **Feature Distribution**: Interactive histograms for numerical features
+
+#### 🏗️ **Model Training Tab**
+- **Preprocessing**: Data cleaning and preparation
+- **Feature Selection**: Correlation-based feature selection
+- **Model Training**: Hyperparameter tuning and model training
+
+#### 📈 **Results & Evaluation Tab**
+- **Performance Metrics**: Training vs validation performance
+- **Feature Importance**: Top features and their importance scores
+- **Cross-Validation**: RMSE distribution and stability analysis
+- **Overfitting Analysis**: Comprehensive overfitting detection
+
+#### 🏆 **Predictions Tab**
+- Generate predictions for test data
+- Download predictions as CSV
+- Prediction statistics and distribution plots
+
+#### ⚙️ **Settings Tab**
+- Data file status and sizes
+- Model status and session state management
+- Debugging tools
+
+---
+
 ## 🧩 Problem Solved
 The original Random Forest model suffered from significant overfitting, showing a large gap between training performance (7.99% MAPE) and validation performance (12.14% MAPE). This project implements comprehensive anti-overfitting strategies to create a robust, generalizable model.
+
+---
 
 ## 🚀 Key Improvements Made
 
@@ -42,6 +86,8 @@ The original Random Forest model suffered from significant overfitting, showing 
 - Feature importance distribution analysis
 - Model complexity evaluation
 
+---
+
 ## 📊 Results Achieved
 
 ### **Before (Original Model)**
@@ -55,6 +101,8 @@ The original Random Forest model suffered from significant overfitting, showing 
 - **Overfitting Gap: 1.77 percentage points** ✅
 - **Performance Gap: 3.4% (R² scores)**
 - **Final Verdict: EXCELLENT - Minimal overfitting!**
+
+---
 
 ## 🛠️ Technical Implementation
 
@@ -76,59 +124,82 @@ The original Random Forest model suffered from significant overfitting, showing 
 - Performance gap tracking
 - Multi-dimensional overfitting assessment
 
-## ⚙️ Project Structure
+---
+
+## 🗂️ Project Structure
 ```
 ├── housing_prices_improved.py    # Main improved model
-├── train.csv                     # Training dataset
-├── test.csv                      # Test dataset
-└── improved_submission.csv       # Generated predictions
+├── app.py                       # Streamlit dashboard
+├── train.csv                    # Training dataset
+├── test.csv                     # Test dataset
+├── improved_submission.csv       # Generated predictions
+└── requirements.txt              # Dependencies for dashboard
 ```
 
-## 🔧 Dependencies
+---
+
+## 🧩 Dashboard Installation & Usage
+
+### Installation
+
+1. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Ensure data files are present:**
+   - `train.csv` - Training dataset
+   - `test.csv` - Test dataset
+   - Both files should be in the same directory as the application
+
+### Running the Dashboard
+
+1. **Start the Streamlit app:**
+   ```bash
+   streamlit run app.py
+   ```
+
+2. **Open your browser:**
+   - The dashboard will automatically open at `http://localhost:8501`
+   - If it doesn't open automatically, navigate to the URL manually
+
+### Usage Instructions
+
+**Step-by-Step Workflow:**
+1. **Start with Overview**: Check that all data files are available
+2. **Data Analysis**: Explore your data, check correlations, select features
+3. **Model Training**: Run preprocessing, feature selection, and model training
+4. **Results & Evaluation**: Analyze model performance and overfitting
+5. **Predictions**: Generate and download final predictions
+
+**Important Notes:**
+- **Follow the order**: Complete each step before moving to the next
+- **Check warnings**: The app will guide you through the process
+- **Session state**: Your progress is saved during the session
+- **Data requirements**: Ensure `train.csv` and `test.csv` are present
+
+---
+
+## 🧰 Dependencies
+
 - `numpy`, `pandas` - Data manipulation
 - `scikit-learn` - Machine learning algorithms
-- `matplotlib` - Data visualization
-- `warnings` - Warning suppression
+- `matplotlib`, `seaborn`, `plotly` - Data visualization
+- `streamlit` - Web dashboard
 
-## 🚀 Usage
-```bash
-python housing_prices_improved.py
-```
-
-## 🔑 Key Features
-- **Overfitting Prevention**: Comprehensive strategies to prevent model overfitting
-- **Feature Selection**: Intelligent correlation-based feature selection
-- **Hyperparameter Optimization**: Grid search with cross-validation
-- **Ensemble Learning**: Combines multiple models for better generalization
-- **Comprehensive Analysis**: Detailed overfitting detection and model evaluation
-- **Production Ready**: Generates Kaggle-ready submission file
-
-## 🎯 Use Cases
-- Real estate price prediction
-- Machine learning model overfitting prevention
-- Feature selection and engineering
-- Ensemble learning implementation
-- Cross-validation and model evaluation
-
-## 🔍 Overfitting Detection Methods
-1. **Performance Gap Analysis**: Training vs validation R² scores
-2. **MAPE Gap Assessment**: Training vs validation MAPE differences
-3. **Cross-Validation Analysis**: 10-fold CV with overfitting detection
-4. **Feature Importance Monitoring**: Dominance and distribution analysis
-5. **Model Complexity Evaluation**: Hyperparameter appropriateness
-
-## 📈 Model Performance
-- **Cross-Validation RMSE**: 41,418.38 (±14,240.11)
-- **Out-of-Bag Score**: 0.7061
-- **Feature Count**: 14 (reduced from 81)
-- **Training Set Size**: 1,168 samples
-- **Validation Set Size**: 292 samples
+---
 
 ## 🏆 Achievements
+
 - ✅ **Eliminated significant overfitting** (gap reduced from 4.15% to 1.77%)
 - ✅ **Maintained predictive performance** while improving generalization
 - ✅ **Implemented production-ready pipeline** with comprehensive evaluation
 - ✅ **Created robust ensemble model** combining Random Forest and Ridge Regression
 - ✅ **Developed comprehensive overfitting detection system**
+- ✅ **Built an interactive dashboard for end-to-end analysis**
 
-This project demonstrates advanced machine learning techniques for preventing overfitting while maintaining model performance, making it an excellent example of production-ready ML pipeline development.
+---
+
+## 📄 License
+
+This project and dashboard are open-source and available for educational and practical use.
