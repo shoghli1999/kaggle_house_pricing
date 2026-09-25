@@ -14,10 +14,15 @@ ENV/
 *.csv
 *.xlsx
 *.xls
+# ...except the Kaggle data and the saved results the README and app quote
+!train.csv
+!test.csv
+!results/*.csv
 
-# Model files
+# Model files (rebuilt by train_final.py)
 *.pkl
 *.joblib
+models/
 
 # IDE settings
 .vscode/

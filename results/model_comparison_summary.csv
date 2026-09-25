@@ -1,0 +1,5 @@
+configuration,train_mape_pct,val_mape_pct,gap_pp,cv_mape_mean_pct,val_r2_mean,val_r2_worst
+"A. Random Forest, unconstrained (numeric only)",4.15,10.34,6.19,11.34,0.88,0.84
+"B. Random Forest, over-regularised (numeric only)",15.27,15.3,0.02,15.64,0.69,0.65
+"C. Ridge, log target (all features)",7.93,9.04,1.11,9.23,0.84,0.54
+"D. Gradient boosting, log target (all features)",4.15,9.13,4.98,9.76,0.89,0.87

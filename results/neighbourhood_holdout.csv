@@ -1,0 +1,2 @@
+configuration,rmsle_mean,rmsle_std,mape_mean_pct,mae_mean_usd,r2_mean,r2_worst_fold
+"final model, GroupKFold by Neighborhood",0.1287,0.0397,9.1437,15884.5661,0.8605,0.7768

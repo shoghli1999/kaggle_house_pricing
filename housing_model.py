@@ -3,7 +3,7 @@
 House price regression: a controlled comparison of four modelling configurations
 on the Ames housing data.
 
-The point of this script is not to win a leaderboard. It is to show what happens
+This script shows what happens
 when you fix overfitting the wrong way, and then the right way, measured on the
 same split with the same code.
 
@@ -186,7 +186,7 @@ def build_configurations(X_train: pd.DataFrame, y_train: pd.Series, seed: int, q
     )
 
     # The constraint set from the first attempt, kept verbatim so the comparison
-    # is honest. min_weight_fraction_leaf=0.1 is the decisive one: it forces every
+    # is fair. min_weight_fraction_leaf=0.1 is the decisive one: it forces every
     # leaf to hold at least 10% of the training weight, which caps the tree at
     # roughly ten leaves no matter what max_depth says.
     over_regularised = Pipeline(
