@@ -1,0 +1,2 @@
+# The notebook in archive/ is the first version; count the current code as Python.
+*.ipynb linguist-documentation
